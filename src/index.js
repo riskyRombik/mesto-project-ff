@@ -16,7 +16,7 @@ function addCard(card){
 };
 //Вывести карточки на страницу
 initialCards.forEach(function(card) {
-  const cardData = createCard(card);
+  const cardData = createCard(card,showImg);
   addCard(cardData);
 });
 // Слушатели на кнопки попапов
@@ -24,30 +24,33 @@ popupEditButton.addEventListener('click', () => {openModal(popupEdit);});
 popupNewCardButton.addEventListener('click', () => {openModal(popupNewCard);});
 
 // функция открытия модального окна с изображением карточки
+const popTypeImage = document.querySelector('.popup_type_image');
+const popImage = document.querySelector('.popup__image');
+const popCaption = document.querySelector('.popup__caption')
 function showImg(cardImg, cardTitle) {
-  const popImg = document.querySelector('.popup_type_image');
-  document.querySelector('.popup__image').src = cardImg;
-  document.querySelector('.popup__caption').textContent = cardTitle;
-  openModal(popImg);
+  popImage.src = cardImg;
+  popCaption.textContent = cardTitle;
+  popImage.alt = cardTitle;
+  openModal(popTypeImage);
 }
 
 const formProfile = document.querySelector('[name="edit_profile"]');
 const nameInput = formProfile.querySelector('.popup__input_type_name');
 const jobInput = formProfile.querySelector('.popup__input_type_description');
+const profileTitle = document.querySelector('.profile__title');
+const profileDescription = document.querySelector('.profile__description');
 // функция заполнения полей формы 
 function saveFormFields () {
-  const profileTitle = document.querySelector('.profile__title').textContent;
-  const profileDescription = document.querySelector('.profile__description').textContent;
-  nameInput.value = profileTitle;
-  jobInput.value = profileDescription;
+  nameInput.value = profileTitle.textContent;
+  jobInput.value = profileDescription.textContent;
 }
 // функция изменения данных профиля
 function handleFormProfileSubmit(evt) {
     evt.preventDefault(); 
     const name = nameInput.value
     const job = jobInput.value;
-    document.querySelector('.profile__title').textContent = name;
-    document.querySelector('.profile__description').textContent = job;
+    profileTitle.textContent = name;
+    profileDescription.textContent = job;
     closeModal(popupEdit)
 }
 // Колбэк для изменения данных профиля
@@ -60,7 +63,7 @@ function handleFormNewPlaceSubmit(evt) {
   evt.preventDefault(); 
   const cardName = formNewCard.querySelector('.popup__input_type_card-name');
   const cardLink = formNewCard.querySelector('.popup__input_type_url');
-  const cardData = [];
+  const cardData = {};
   cardData.name = cardName.value;
   cardData.link = cardLink.value;
   const card = createCard(cardData);
@@ -71,7 +74,7 @@ function handleFormNewPlaceSubmit(evt) {
 }
 formNewCard.addEventListener('submit', handleFormNewPlaceSubmit);
 
-export{cardTemplate, showImg};
+export{cardTemplate};
 
 
 
