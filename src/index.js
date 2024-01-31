@@ -59,10 +59,10 @@ formProfile.addEventListener('submit', handleFormProfileSubmit);
 popupEditButton.addEventListener('click', saveFormFields);
 // Функция 
 const formNewCard = document.querySelector('[name="new-place"]');
+const cardName = formNewCard.querySelector('.popup__input_type_card-name');
+  const cardLink = formNewCard.querySelector('.popup__input_type_url');
 function handleFormNewPlaceSubmit(evt) {
   evt.preventDefault(); 
-  const cardName = formNewCard.querySelector('.popup__input_type_card-name');
-  const cardLink = formNewCard.querySelector('.popup__input_type_url');
   const cardData = {};
   cardData.name = cardName.value;
   cardData.link = cardLink.value;
