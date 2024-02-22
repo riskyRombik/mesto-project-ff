@@ -1,34 +1,43 @@
 import "./pages/index.css";
 // import { initialCards } from "./components/cards";
-import { createCard, cardPlaces, displayCard, idCard, handleDeleteCard } from "./components/card";
+import { createCard, cardPlaces, addCard, idCard, handleDeleteCard, onLike, onDelete} from "./components/card";
 import { openModal, closeModal, renderLoading } from "./components/modal";
 import { enableValidation,  validationConfig, clearValidation } from "./components/validation";
 import { getData, updateUser, postNewCard, requestAvatar} from "./components/api";
 
-// Темплейт карточки
-const cardTemplate = document.querySelector("#card-template").content;
+let idUser;
 //попап изменения данных профиля
 const popupEdit = document.querySelector(".popup_type_edit");
 const popupEditButton = document.querySelector(".profile__edit-button");
 //попап создания новой карточки
 const popupNewCard = document.querySelector(".popup_type_new-card");
 const popupNewCardButton = document.querySelector(".profile__add-button");
-let idUser;
 
+const popTypeImage = document.querySelector(".popup_type_image");
+const popImage = document.querySelector(".popup__image");
+const popCaption = document.querySelector(".popup__caption");
 
+function showImg(cardImg, cardTitle) {
+  popImage.src = cardImg;
+  popCaption.textContent = cardTitle;
+  popImage.alt = cardTitle;
+  openModal(popTypeImage);
+}
 
-
-// Слушатели на кнопки попапов
 popupEditButton.addEventListener("click", () => {
-  openModal(popupEdit);
-  clearValidation(popupEdit, validationConfig);
-});
+  getData('/users/me')
+  .then(userData=> {
+    saveFormFields(userData);
+    openModal(popupEdit);
+    clearValidation(popupEdit, validationConfig)
+  })
+  .catch(err => console.log(err))
+})
+
 popupNewCardButton.addEventListener("click", () => {
   openModal(popupNewCard);
   clearValidation(popupNewCard, validationConfig);
 });
-
-
 
 const formProfile = document.querySelector('[name="edit_profile"]');
 const nameInput = formProfile.querySelector(".popup__input_type_name");
@@ -41,10 +50,11 @@ const popupTypeAvatar = document.querySelector(".popup_type_avatar")
 const formAvatar = document.querySelector('[name="new-avatar"]');
 
 // функция заполнения полей формы
-function saveFormFields() {
-  nameInput.value = profileTitle.textContent;
-  jobInput.value = profileDescription.textContent;
+function saveFormFields(data) {
+  nameInput.value = data.name;
+  jobInput.value = data.about;
 }
+
 
 function recordingProfileData (data) {
   profileTitle.textContent = data.name;
@@ -58,10 +68,16 @@ function handleFormProfileSubmit(evt) {
   const name = profileTitle.textContent = nameInput.value;
   const about = profileDescription.textContent = jobInput.value;
   updateUser('/users/me', name, about)
+  .then(data => {
+    profileTitle.textContent = data.name;
+    profileDescription.textContent = data.about;
+    closeModal(popupEdit);
+  })
+  .catch(err => console.log(err))
   .finally(() => {
     renderLoading(false);
   }); 
-  closeModal(popupEdit);
+
 }
 // Колбэк для изменения данных профиля
 formProfile.addEventListener("submit", handleFormProfileSubmit);
@@ -76,6 +92,13 @@ const formNewCard = document.querySelector('[name="new-place"]');
 const cardName = formNewCard.querySelector(".popup__input_type_card-name");
 const cardLink = formNewCard.querySelector(".popup__input_type_url");
 
+function displayCard(data, idUser, popupTypeDelete, showImg, like, deleteCard) {
+  data.forEach(function (card) {
+    const cardData = createCard(card, showImg, idUser, popupTypeDelete, like, deleteCard);
+    addCard(cardData);
+  });
+}
+
 function handleFormNewPlaceSubmit(evt) {
   evt.preventDefault();
   renderLoading(true);
@@ -84,7 +107,7 @@ function handleFormNewPlaceSubmit(evt) {
   
   postNewCard('/cards', cardItem, cardSrc)
   .then(data => {
-    const card = createCard(data); // Функция createCard создает DOM-элемент карточки на основе полученных данных
+    const card = createCard(data, showImg, idUser, popupTypeDelete, onLike, onDelete); // Функция createCard создает DOM-элемент карточки на основе полученных данных
     cardPlaces.prepend(card); // Вставляем созданный элемент в начало контейнера
     cardName.value = "";
     cardLink.value = "";
@@ -132,11 +155,11 @@ formAvatar.addEventListener('submit', (event) => {
     idUser = userData._id;
     profileImage.style.backgroundImage = `url(${userData.avatar})`;
     recordingProfileData(userData);
-    displayCard(cardData, idUser, popupTypeDelete);
-  })
+    displayCard(cardData, idUser, popupTypeDelete, showImg, onLike, onDelete);
+})
   .catch(error => console.error('Произошла ошибка:', error));
 
-
-export { cardTemplate};
-
-
+  // function saveFormFields(data) {
+  //   nameInput.value = data.name;
+  //   jobInput.value = data.about;
+  // }

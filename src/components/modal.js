@@ -1,6 +1,7 @@
 function openModal(popup) {
   // объявляем функцию открытия модального окна, которая принимает в качестве параметров селекторы кнопки и соответствующего модального окна
   popup.classList.add("popup_is-opened");
+
   document.addEventListener("keydown", closeByEsc);
   popup.addEventListener("click", clickModalClose);
 }
@@ -8,6 +9,7 @@ function openModal(popup) {
 function closeModal(popup) {
   popup.classList.remove("popup_is-opened");
   document.removeEventListener("keydown", closeByEsc);
+  popup.removeEventListener("click", clickModalClose);
 }
 
 function closeByEsc(evt) {

@@ -68,8 +68,10 @@ function hasInvalidInput(inputList) {
 function toggleButtonState(inputList, buttonElement, config) {
   if (hasInvalidInput(inputList)) {
     buttonElement.classList.add(config.inactiveButtonClass);
+    buttonElement.disabled = true;
   } else {
     buttonElement.classList.remove(config.inactiveButtonClass);
+    buttonElement.disabled = false;
   }
 }
 
@@ -83,6 +85,7 @@ function clearValidation(formElement, config) {
 
   const submitButton = formElement.querySelector(config.submitButtonSelector);
   submitButton.classList.add(config.inactiveButtonClass);
+  submitButton.disabled = true;
 };
 
 

@@ -6,7 +6,7 @@ const headers =
   }
 const baseUrl = 'https://nomoreparties.co/v1/wff-cohort-6';
 
-const response =
+const checkResponse =
 (res) => {
   if (res.ok) {
       return res.json();
@@ -19,8 +19,9 @@ function getData (uri) {
   return fetch(baseUrl + uri, {
     headers: headers
   })
-    .then(response)
+    .then(checkResponse)
 }
+
 
 function updateUser (uri, newName, newAbout) {
   return fetch(baseUrl + uri, {
@@ -31,8 +32,7 @@ function updateUser (uri, newName, newAbout) {
           about: newAbout 
       }) 
   })
-  .then(response)
-  .catch(err => console.log(err));
+  .then(checkResponse)
 }
 
 function postNewCard (uri, name, link) {
@@ -44,8 +44,7 @@ function postNewCard (uri, name, link) {
           link: link 
       }) 
   })
-  .then(response)
-  .catch(err => console.log(err));
+  .then(checkResponse)
 }
 
 function deleteCard (uri, cardId) {
@@ -53,8 +52,7 @@ function deleteCard (uri, cardId) {
     method: 'DELETE',
     headers: headers,
   }) 
-  .then(response)
-  .catch(err => console.log(err));
+  .then(checkResponse)
 }
 
 function requestAvatar (uri, link) {
@@ -65,8 +63,7 @@ function requestAvatar (uri, link) {
       avatar: link 
     }) 
   }) 
-  .then(response)
-  .catch(err => console.log(err));
+  .then(checkResponse)
 }
 
 function updateCardLikeStatus(uri, cardId, method) {
@@ -74,13 +71,7 @@ function updateCardLikeStatus(uri, cardId, method) {
       method: method,
       headers: headers,
   })
-  .then(response => {
-      if (response.ok) {
-          return response.json();
-      } else {
-          throw new Error(`Ошибка: ${response.status}`);
-      }
-  });
+  .then(checkResponse)
 }
 
 export {getData, updateUser, postNewCard, deleteCard, requestAvatar, updateCardLikeStatus};
