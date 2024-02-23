@@ -1,6 +1,6 @@
 import "./pages/index.css";
 // import { initialCards } from "./components/cards";
-import { createCard, cardPlaces, addCard, idCard, handleDeleteCard, onLike, onDelete} from "./components/card";
+import { createCard, cardPlaces, idCard, handleDeleteCard, onLike, onDelete} from "./components/card";
 import { openModal, closeModal, renderLoading } from "./components/modal";
 import { enableValidation,  validationConfig, clearValidation } from "./components/validation";
 import { getData, updateUser, postNewCard, requestAvatar} from "./components/api";
@@ -81,8 +81,6 @@ function handleFormProfileSubmit(evt) {
 }
 // Колбэк для изменения данных профиля
 formProfile.addEventListener("submit", handleFormProfileSubmit);
-// Колбэк для заполнения полей формы данных о пользователе
-popupEditButton.addEventListener("click", saveFormFields);
 
 formDelete.addEventListener("click", () => {
   handleDeleteCard(idCard, popupTypeDelete);
@@ -97,6 +95,10 @@ function displayCard(data, idUser, popupTypeDelete, showImg, like, deleteCard) {
     const cardData = createCard(card, showImg, idUser, popupTypeDelete, like, deleteCard);
     addCard(cardData);
   });
+}
+
+function addCard(card) {
+  cardPlaces.append(card);
 }
 
 function handleFormNewPlaceSubmit(evt) {

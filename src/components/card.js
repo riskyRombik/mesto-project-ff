@@ -93,11 +93,9 @@ function createCard(cardData, showImg, idUser, popupTypeDelete, like, removeCard
   return cardElement;
 }
 
-function addCard(card) {
-  cardPlaces.append(card);
-}
 
 
-export { createCard, cardPlaces, addCard, idCard, handleDeleteCard, onLike, onDelete};
+
+export { createCard, cardPlaces, idCard, handleDeleteCard, onLike, onDelete};
 
 
